@@ -95,4 +95,4 @@ The system generates several visualizations to better understand the results:
 - Export of scheduling in standard formats
 
 ## Author
-Gabriel Pentimalli (GabrielPentimalli)[https://github.com/GabrielPentimalli]- gab.pentimalli@stud.uniroma3.it
+Gabriel Pentimalli ([@GabrielPentimalli](https://github.com/GabrielPentimalli)) - gab.pentimalli@stud.uniroma3.it
