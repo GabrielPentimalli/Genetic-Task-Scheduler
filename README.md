@@ -6,11 +6,11 @@ Genetic Task Scheduler is a Python application that uses genetic algorithms to s
 ## Problem Statement
 The scheduling problem addressed can be defined as follows:
 
-- There is a single machine used by N clients
+- There is a single machine used by $N$ clients
 - For each client, a single task must be executed on the machine
-- The benefit that client j obtains from task execution is defined as: u_j = b_j - a_j * c_j
-- Each task has a release time r_j before which it cannot start
-- The objective is to find an execution sequence that maximizes the minimum benefit among all clients: max{min_j(u_j)}
+- The benefit that client $j$ obtains from task execution is defined as: $u_j = b_j - a_j * c_j$
+- Each task has a release time $r_j$ before which it cannot start
+- The goal is to find an execution sequence that maximizes the minimum benefit among all clients: $max{min_j(u_j)}$
 
 ## Requirements
 - Python 3.8+
@@ -94,8 +94,5 @@ The system generates several visualizations to better understand the results:
 - Graphical interface for parameter input and result visualization
 - Export of scheduling in standard formats
 
-## Authors
-[Author Name]
-
-## License
-[License Type]
+## Author
+Gabriel Pentimalli (GabrielPentimalli)[https://github.com/GabrielPentimalli]- gab.pentimalli@stud.uniroma3.it
