@@ -93,9 +93,6 @@ The program prints:
 - bottleneck task (the one with minimum utility)
 - best found execution sequence
 
-## License
-
-MIT. See [LICENSE](LICENSE).
 
 ## Author
 
@@ -105,5 +102,3 @@ Gabriel Pentimalli
 - LinkedIn: https://www.linkedin.com/in/gabriel-pentimalli-54180625a/
 - GitHub: https://github.com/GabrielPentimalli
 ```
-
-Parent 1: [1|2 3 4|5 6 7]     Parent 2: [4|7 1 6|2 3 5]
