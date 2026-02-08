@@ -1,8 +1,5 @@
 # Genetic Task Scheduler
 
-![Python](https://img.shields.io/badge/python-v3.8+-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-
 A genetic algorithm implementation for a single-machine scheduling problem with a fairness objective: maximize the minimum client utility.
 
 ## Problem statement
@@ -20,7 +17,7 @@ $$u_j = b_j - a_j \cdot C_j$$
 
 Goal (max-min fairness):
 
-$$\max \; \min_j(u_j)$$
+$$\max \min_j u_j $$
 
 ## Approach
 
@@ -92,13 +89,3 @@ The program prints:
 - mean utility
 - bottleneck task (the one with minimum utility)
 - best found execution sequence
-
-
-## Author
-
-Gabriel Pentimalli
-
-- Email: gab.pentimalli@stud.uniroma3.it
-- LinkedIn: https://www.linkedin.com/in/gabriel-pentimalli-54180625a/
-- GitHub: https://github.com/GabrielPentimalli
-```
