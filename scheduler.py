@@ -1,14 +1,8 @@
-#!/usr/bin/env python3
 """
 Genetic Task Scheduler
 ======================
-Algoritmo genetico per risolvere un problema di scheduling
-con l'obiettivo di massimizzare il minimo beneficio (utility) dei clienti.
-
-Utilizzo:
-    python scheduler.py --help
-    python scheduler.py --n-tasks 20 --generations 200
-    python scheduler.py --n-tasks 30 --mode balanced --visualize
+Genetic algorithm to solve a scheduling problem
+aiming to maximize the minimum customer benefit (utility).
 """
 
 import argparse
@@ -20,12 +14,12 @@ from typing import List, Tuple, Optional
 
 
 # =============================================================================
-# CLASSI PRINCIPALI
+# MAIN CLASSES
 # =============================================================================
 
 @dataclass
 class Task:
-    """Rappresenta un task con i suoi parametri."""
+    """Represents a task with its parameters."""
     id: int
     release_time: float
     duration: float
@@ -33,19 +27,19 @@ class Task:
     penalty_coeff: float
 
     def calculate_utility(self, completion_time: float) -> float:
-        """Calcola l'utilità: u = b - a * c"""
+        """Calculates utility: u = b - a * c"""
         return self.benefit_coeff - self.penalty_coeff * completion_time
 
 
 class SchedulingProblem:
-    """Gestisce la valutazione di una sequenza di task."""
+    """Manages the evaluation of a task sequence."""
     
     def __init__(self, tasks: List[Task]):
         self.tasks = tasks
         self.n_tasks = len(tasks)
 
     def evaluate_solution(self, sequence: List[int]) -> Tuple[float, List[float], List[float], List[float]]:
-        """Valuta una soluzione (sequenza di task)."""
+        """Evaluates a solution (task sequence)."""
         current_time = 0.0
         start_times = [0.0] * self.n_tasks
         completion_times = [0.0] * self.n_tasks
@@ -64,7 +58,7 @@ class SchedulingProblem:
 
 
 class GeneticAlgorithm:
-    """Algoritmo genetico per scheduling con OX crossover e swap mutation."""
+    """Genetic algorithm for scheduling with OX crossover and swap mutation."""
     
     def __init__(self, problem: SchedulingProblem, 
                  population_size: int = 100,
@@ -141,7 +135,7 @@ class GeneticAlgorithm:
             if self.verbose and gen % max(1, generations // 5) == 0:
                 print(f"{gen:5d}  {fitnesses[best_idx]:10.3f}  {np.mean(fitnesses):10.3f}")
             
-            # Nuova popolazione
+            # New population
             new_pop = [population[i].copy() for i in np.argsort(fitnesses)[-self.elite_size:]]
             
             while len(new_pop) < self.population_size:
@@ -156,17 +150,17 @@ class GeneticAlgorithm:
             population = new_pop[:self.population_size]
         
         if self.verbose:
-            print(f"\n- Fitness finale: {best_fitness:.4f}")
+            print(f"\n- Final Fitness: {best_fitness:.4f}")
         
         return best_individual, best_fitness
 
 
 # =============================================================================
-# GENERATORI DI PROBLEMI
+# PROBLEM GENERATORS
 # =============================================================================
 
 def generate_random_problem(n_tasks: int = 10, seed: Optional[int] = None) -> SchedulingProblem:
-    """Genera problema con parametri casuali realistici."""
+    """Generates problem with realistic random parameters."""
     if seed is not None:
         np.random.seed(seed)
         random.seed(seed)
@@ -185,7 +179,7 @@ def generate_random_problem(n_tasks: int = 10, seed: Optional[int] = None) -> Sc
 
 
 def generate_balanced_problem(n_tasks: int = 10, seed: Optional[int] = None) -> SchedulingProblem:
-    """Genera problema con parametri bilanciati (utilità più stabili)."""
+    """Generates problem with balanced parameters (more stable utilities)."""
     if seed is not None:
         np.random.seed(seed)
         random.seed(seed)
@@ -201,7 +195,7 @@ def generate_balanced_problem(n_tasks: int = 10, seed: Optional[int] = None) -> 
 
 
 def generate_high_contention_problem(n_tasks: int = 10, seed: Optional[int] = None) -> SchedulingProblem:
-    """Genera problema con alta contesa (task simultanei, penalità alte)."""
+    """Generates problem with high contention (simultaneous tasks, high penalties)."""
     if seed is not None:
         np.random.seed(seed)
         random.seed(seed)
@@ -217,11 +211,11 @@ def generate_high_contention_problem(n_tasks: int = 10, seed: Optional[int] = No
 
 
 # =============================================================================
-# CONFRONTO STRATEGIE
+# STRATEGY COMPARISON
 # =============================================================================
 
 def compare_strategies(problem: SchedulingProblem, ga_fitness: float) -> dict:
-    """Confronta GA con euristiche classiche."""
+    """Compares GA with classic heuristics."""
     results = {'Genetic Algorithm': ga_fitness}
     
     # Random (best of 100)
@@ -241,13 +235,13 @@ def compare_strategies(problem: SchedulingProblem, ga_fitness: float) -> dict:
 
 
 # =============================================================================
-# VISUALIZZAZIONE
+# VISUALIZATION
 # =============================================================================
 
 def visualize_results(problem: SchedulingProblem, solution: List[int], 
                      ga: GeneticAlgorithm, utilities: List[float],
                      start_times: List[float], comparison: dict):
-    """Genera 2 grafici essenziali per presentazione."""
+    """Generates 2 essential charts for presentation."""
     try:
         import matplotlib.pyplot as plt
         plt.style.use('seaborn-v0_8-whitegrid')
@@ -255,7 +249,7 @@ def visualize_results(problem: SchedulingProblem, solution: List[int],
         try:
             import matplotlib.pyplot as plt
         except ImportError:
-            print("Matplotlib non disponibile.")
+            print("Matplotlib not available.")
             return
     
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
@@ -269,26 +263,26 @@ def visualize_results(problem: SchedulingProblem, solution: List[int],
                  edgecolor='black', linewidth=0.5)
         ax1.text(start_times[tid] + task.duration/2, i, f'T{tid}', 
                  ha='center', va='center', fontsize=9, fontweight='bold')
-    ax1.set_xlabel('Tempo', fontsize=11)
-    ax1.set_ylabel('Ordine esecuzione', fontsize=11)
-    ax1.set_title('Gantt Chart - Scheduling Ottimale', fontsize=12, fontweight='bold')
+    ax1.set_xlabel('Time', fontsize=11)
+    ax1.set_ylabel('Execution Order', fontsize=11)
+    ax1.set_title('Gantt Chart - Optimal Scheduling', fontsize=12, fontweight='bold')
     ax1.set_yticks(range(len(solution)))
     ax1.set_yticklabels([f'{i+1}' for i in range(len(solution))])
     
-    # 2. Confronto strategie
+    # 2. Strategy Comparison
     ax2 = axes[1]
     strategies = list(comparison.keys())
     values = list(comparison.values())
     colors = ['green' if s == 'Genetic Algorithm' else 'steelblue' for s in strategies]
     bars = ax2.barh(strategies, values, color=colors, edgecolor='black')
     ax2.set_xlabel('Fitness (Min Utility)', fontsize=11)
-    ax2.set_title('Confronto Strategie', fontsize=12, fontweight='bold')
+    ax2.set_title('Strategy Comparison', fontsize=12, fontweight='bold')
     for bar, v in zip(bars, values):
         ax2.text(v + 1, bar.get_y() + bar.get_height()/2, f'{v:.1f}', va='center', fontsize=10)
     
     plt.tight_layout()
     plt.savefig('scheduling_results.png', dpi=150, bbox_inches='tight')
-    print("\nGrafici salvati in 'scheduling_results.png'")
+    print("\nCharts saved to 'scheduling_results.png'")
     plt.show()
 
 
@@ -301,29 +295,29 @@ def main():
         description='Genetic Task Scheduler',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
-Esempi:
+Examples:
   python scheduler.py --n-tasks 20 --generations 200
   python scheduler.py --n-tasks 30 --mode balanced --visualize
   python scheduler.py --mode high-contention --n-tasks 25 --compare
         """
     )
     
-    # Parametri problema
-    parser.add_argument('--n-tasks', type=int, default=10, help='Numero di task (default: 10)')
-    parser.add_argument('--seed', type=int, default=None, help='Seed per riproducibilità')
+    # Problem parameters
+    parser.add_argument('--n-tasks', type=int, default=10, help='Number of tasks (default: 10)')
+    parser.add_argument('--seed', type=int, default=None, help='Seed for reproducibility')
     parser.add_argument('--mode', type=str, default='random',
                         choices=['random', 'balanced', 'high-contention'],
-                        help='Modalità: random, balanced, high-contention')
+                        help='Mode: random, balanced, high-contention')
     
-    # Parametri GA
-    parser.add_argument('--generations', type=int, default=200, help='Generazioni (default: 200)')
-    parser.add_argument('--population-size', type=int, default=100, help='Popolazione (default: 100)')
+    # GA parameters
+    parser.add_argument('--generations', type=int, default=200, help='Generations (default: 200)')
+    parser.add_argument('--population-size', type=int, default=100, help='Population size (default: 100)')
     parser.add_argument('--mutation-rate', type=float, default=0.1, help='Mutation rate (default: 0.1)')
     
-    # Opzioni output
-    parser.add_argument('--visualize', action='store_true', help='Mostra grafici')
-    parser.add_argument('--compare', action='store_true', help='Confronta strategie')
-    parser.add_argument('--quiet', action='store_true', help='Output minimo')
+    # Output options
+    parser.add_argument('--visualize', action='store_true', help='Show charts')
+    parser.add_argument('--compare', action='store_true', help='Compare strategies')
+    parser.add_argument('--quiet', action='store_true', help='Minimal output')
     
     args = parser.parse_args()
     
@@ -332,7 +326,7 @@ Esempi:
     print("   GENETIC TASK SCHEDULER")
     print(f"{'='*50}")
     
-    # Genera problema
+    # Generate problem
     generators = {
         'random': generate_random_problem,
         'balanced': generate_balanced_problem,
@@ -340,12 +334,12 @@ Esempi:
     }
     problem = generators[args.mode](n_tasks=args.n_tasks, seed=args.seed)
     
-    print(f"\nProblema: {args.n_tasks} task, modalità '{args.mode}'")
+    print(f"\nProblem: {args.n_tasks} tasks, mode '{args.mode}'")
     if args.seed:
         print(f"   Seed: {args.seed}")
     
-    # Esegui GA
-    print(f"\nAlgoritmo Genetico ({args.generations} gen, pop={args.population_size})\n")
+    # Run GA
+    print(f"\nGenetic Algorithm ({args.generations} gen, pop={args.population_size})\n")
     
     start = time.time()
     ga = GeneticAlgorithm(problem, args.population_size, args.mutation_rate, verbose=not args.quiet)
@@ -355,28 +349,28 @@ Esempi:
     solution = [int(x) for x in best_solution]
     _, utilities, start_times, completion_times = problem.evaluate_solution(solution)
     
-    # Risultati
+    # Results
     print(f"\n{'='*50}")
-    print("   RISULTATI")
+    print("   RESULTS")
     print(f"{'='*50}")
-    print(f"\nTempo: {elapsed:.2f}s")
+    print(f"\nTime: {elapsed:.2f}s")
     print(f"Fitness (min utility): {best_fitness:.3f}")
-    print(f"Utility media: {np.mean(utilities):.3f}")
-    print(f"Task bottleneck: T{np.argmin(utilities)}")
-    print(f"\nSequenza ottima: {solution}")
+    print(f"Average utility: {np.mean(utilities):.3f}")
+    print(f"Bottleneck task: T{np.argmin(utilities)}")
+    print(f"\nOptimal sequence: {solution}")
     
-    # Confronto
+    # Comparison
     comparison = None
     if args.compare:
         comparison = compare_strategies(problem, best_fitness)
         print(f"\n{'='*50}")
-        print("   CONFRONTO STRATEGIE")
+        print("   STRATEGY COMPARISON")
         print(f"{'='*50}")
         for s, f in sorted(comparison.items(), key=lambda x: -x[1]):
             marker = " ★" if s == 'Genetic Algorithm' else ""
             print(f"  {s:20s}: {f:8.2f}{marker}")
     
-    # Visualizzazione
+    # Visualization
     if args.visualize:
         if comparison is None:
             comparison = compare_strategies(problem, best_fitness)
